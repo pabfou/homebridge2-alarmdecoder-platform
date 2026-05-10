@@ -1,0 +1,127 @@
+{
+  "pluginAlias": "AlarmDecoderPlatform",
+  "pluginType": "platform",
+  "singular": true,
+  "headerDisplay": "Plugin for AlarmDecoder (Honeywell/DSC) and Interlogix/GE/Caddx alarm panels. Requires a running AlarmDecoder WebApp or NX584 gateway.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Name",
+        "type": "string",
+        "default": "AlarmDecoder",
+        "required": true
+      },
+      "DSCorHoneywell": {
+        "title": "Panel Type",
+        "type": "string",
+        "enum": ["Honeywell", "DSC", "Interlogix"],
+        "default": "Honeywell",
+        "required": true
+      },
+      "port": {
+        "title": "Listener Port",
+        "description": "Port that Homebridge will listen on for push notifications from AlarmDecoder WebApp.",
+        "type": "integer",
+        "default": 8888,
+        "required": true
+      },
+      "stateURL": {
+        "title": "State URL",
+        "description": "URL to query alarm state (e.g. http://YOUR_IP:YOUR_PORT/api/v1/alarmdecoder).",
+        "type": "string",
+        "format": "uri",
+        "required": true
+      },
+      "zoneURL": {
+        "title": "Zone URL",
+        "description": "URL to query zone configuration (e.g. http://YOUR_IP:YOUR_PORT/api/v1/zones).",
+        "type": "string",
+        "format": "uri",
+        "required": true
+      },
+      "setURL": {
+        "title": "Set URL",
+        "description": "URL to send keypad commands (e.g. http://YOUR_IP:YOUR_PORT/api/v1/alarmdecoder/send).",
+        "type": "string",
+        "format": "uri",
+        "required": true
+      },
+      "setPIN": {
+        "title": "PIN",
+        "description": "Your alarm PIN (base PIN only, e.g. '1234' not '12342').",
+        "type": "string",
+        "required": true
+      },
+      "key": {
+        "title": "API Key",
+        "description": "API key from the AlarmDecoder WebApp (Honeywell/DSC only).",
+        "type": "string"
+      },
+      "enableNightMode": {
+        "title": "Enable Night Mode",
+        "description": "Show Night/Instant arm mode in HomeKit. Disable if your panel does not support it.",
+        "type": "boolean",
+        "default": true
+      },
+      "useSwitches": {
+        "title": "Extra Switches",
+        "description": "Create additional HomeKit switches for quick arming or special functions. Note: away/stay/night switches bypass the HomeKit security prompt.",
+        "type": "array",
+        "items": {
+          "title": "Switch",
+          "type": "string",
+          "enum": ["panic", "chime", "away", "stay", "night", "clear"]
+        }
+      },
+      "panicKey": {
+        "title": "Panic Key",
+        "description": "Keypad sequence to trigger panic (e.g. '<S1>'). Honeywell/DSC only.",
+        "type": "string"
+      },
+      "chimeKey": {
+        "title": "Chime Key",
+        "description": "Keypad key for chime toggle (e.g. '9'). Honeywell/DSC only.",
+        "type": "string"
+      },
+      "offKey": {
+        "title": "Off/Clear Key",
+        "description": "Keypad key appended to PIN for the clear command (default: '1').",
+        "type": "string",
+        "default": "1"
+      },
+      "DSCStay": {
+        "title": "DSC Stay Sequence",
+        "description": "DSC key sequence for Stay arm (e.g. '<F4>').",
+        "type": "string",
+        "condition": {
+          "functionBody": "return model.DSCorHoneywell === 'DSC';"
+        }
+      },
+      "DSCAway": {
+        "title": "DSC Away Sequence",
+        "description": "DSC key sequence for Away arm (e.g. '<S5>').",
+        "type": "string",
+        "condition": {
+          "functionBody": "return model.DSCorHoneywell === 'DSC';"
+        }
+      },
+      "DSCReset": {
+        "title": "DSC Reset Sequence",
+        "description": "DSC key sequence for Reset (e.g. '<S7>').",
+        "type": "string",
+        "condition": {
+          "functionBody": "return model.DSCorHoneywell === 'DSC';"
+        }
+      },
+      "DSCExit": {
+        "title": "DSC Exit Sequence",
+        "description": "DSC key sequence for Exit (e.g. '<S8>').",
+        "type": "string",
+        "condition": {
+          "functionBody": "return model.DSCorHoneywell === 'DSC';"
+        }
+      }
+    }
+  }
+}
