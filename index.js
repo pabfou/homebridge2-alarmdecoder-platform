@@ -100,7 +100,7 @@ class AlarmdecoderPlatform {
             accessory.getService(Service.SecuritySystem)
                 .getCharacteristic(Characteristic.SecuritySystemTargetState)
                 .setProps({ validValues: this.enableNightMode ? [0, 1, 2, 3] : [0, 1, 3] })
-                .onGet(() => this.getAlarmState())
+                .onGet(() => this.getAlarmTargetState())
                 .onSet(async (state) => {
                     await this.setAlarmtoState(state);
                     accessory.getService(Service.SecuritySystem)
@@ -227,7 +227,7 @@ class AlarmdecoderPlatform {
             this.alarmSystem.accessory.getService(Service.SecuritySystem)
                 .updateCharacteristic(Characteristic.SecuritySystemCurrentState, this.alarmSystem.state);
             this.alarmSystem.accessory.getService(Service.SecuritySystem)
-                .updateCharacteristic(Characteristic.SecuritySystemTargetState, this.alarmSystem.state);
+                .updateCharacteristic(Characteristic.SecuritySystemTargetState, this._mapTargetState());
 
             let switchToSet = null;
             switch (this.alarmSystem.state) {
@@ -281,6 +281,24 @@ class AlarmdecoderPlatform {
         debug('getting state for Alarm: ' + this.name);
         if (await this._getStateFromAlarm(false) && this.alarmSystem.state >= 0)
             return this.alarmSystem.state;
+        throw new Error('get state failed or null');
+    }
+
+    /* Map the alarm system's armed intent to a valid SecuritySystemTargetState.
+       Never returns 4 (alarm), and falls back night -> home when night mode is off. */
+    _mapTargetState() {
+        let target = this.alarmSystem.targetState;
+        if (target === 2 && !this.enableNightMode)
+            return 0;
+        if (target === 0 || target === 1 || target === 2 || target === 3)
+            return target;
+        return 3;
+    }
+
+    async getAlarmTargetState() {
+        debug('getting target state for Alarm: ' + this.name);
+        if (await this._getStateFromAlarm(false))
+            return this._mapTargetState();
         throw new Error('get state failed or null');
     }
 

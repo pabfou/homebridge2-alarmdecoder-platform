@@ -46,6 +46,17 @@ export class Interlogix extends AlarmBase {
                     else
                         this.state = 1;
                 }
+
+                /* targetState mirrors the armed intent while ignoring the siren/fire
+                   conditions, so it stays a valid HomeKit target even when alarming. */
+                if (!(mainPartition.armed || mainPartition.condition_flags.includes('Instant')))
+                    this.targetState = 3;
+                else if (stayArmed)
+                    this.targetState = 0;
+                else if (mainPartition.condition_flags.includes('Instant'))
+                    this.targetState = 2;
+                else
+                    this.targetState = 1;
             } else {
                 throw 'getAlarmState failed at partition query with response status of ' + response.status;
             }
@@ -60,6 +71,8 @@ export class Interlogix extends AlarmBase {
     /* 0 = stay, 1 = away, 2 = night, 3 = disarmed, 4 = alarm */
     async setAlarmState(state) {
         this.state = state;
+        if (typeof state === 'number' && state >= 0 && state <= 3)
+            this.targetState = state;
         try {
             switch (state) {
             case 0:

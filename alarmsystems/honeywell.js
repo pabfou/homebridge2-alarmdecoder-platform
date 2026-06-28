@@ -77,6 +77,17 @@ export class HoneywellDSC extends AlarmBase {
                 else
                     this.state = 3;
 
+                /* targetState mirrors the armed intent while ignoring the alarming flags,
+                   so it stays a valid HomeKit target even when the panel is alarming. */
+                if (stateObj.panel_armed_night)
+                    this.targetState = 2;
+                else if (stateObj.panel_armed_stay)
+                    this.targetState = 0;
+                else if (stateObj.panel_armed)
+                    this.targetState = 1;
+                else
+                    this.targetState = 3;
+
                 for (let alarmZone in this.alarmZones) {
                     alarmZone = this.alarmZones[alarmZone];
                     alarmZone.faulted = stateObj.panel_zones_faulted.indexOf(alarmZone.zoneID) !== -1;

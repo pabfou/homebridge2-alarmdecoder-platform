@@ -10,6 +10,10 @@ export class AlarmZone {
 export class AlarmBase {
     constructor(log) {
         this.state = null;
+        /* HomeKit-valid arm/disarm intent (0=stay, 1=away, 2=night, 3=disarmed),
+           computed from the armed flags only so it never becomes 4 (alarm). Used to
+           drive SecuritySystemTargetState. */
+        this.targetState = 3;
         this.log = log;
         this.alarmZones = [];
     }
