@@ -226,8 +226,9 @@ class AlarmdecoderPlatform {
         if (report) {
             this.alarmSystem.accessory.getService(Service.SecuritySystem)
                 .updateCharacteristic(Characteristic.SecuritySystemCurrentState, this.alarmSystem.state);
-            this.alarmSystem.accessory.getService(Service.SecuritySystem)
-                .updateCharacteristic(Characteristic.SecuritySystemTargetState, this.alarmSystem.state);
+            if (this.alarmSystem.state <= 3)
+                this.alarmSystem.accessory.getService(Service.SecuritySystem)
+                    .updateCharacteristic(Characteristic.SecuritySystemTargetState, this.alarmSystem.state);
 
             let switchToSet = null;
             switch (this.alarmSystem.state) {
