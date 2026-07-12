@@ -5,7 +5,7 @@ import * as alarms from './alarmsystems/index.js';
 const debug = createDebug('alarmdecoder');
 
 const PLATFORM_NAME = 'AlarmDecoderPlatform';
-const PLUGIN_NAME = 'homebridge2-alarmdecoder-platform';
+const PLUGIN_NAME = 'homebridge-alarmdecoder-platform-v2';
 
 let Accessory, Service, Characteristic, UUIDGen;
 
