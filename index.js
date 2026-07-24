@@ -153,9 +153,10 @@ class AlarmdecoderPlatform {
         if (await this.alarmSystem.initZones()) {
             for (let zone in this.zoneAccessories) {
                 const cachedZone = this.zoneAccessories[zone];
+                const cachedZoneID = cachedZone.displayName.split(' ')[0];
                 for (let adZone in this.alarmSystem.alarmZones) {
                     const tempZone = this.alarmSystem.alarmZones[adZone];
-                    if (cachedZone.displayName === tempZone.zoneID + ' ' + tempZone.name) {
+                    if (cachedZoneID === String(tempZone.zoneID)) {
                         this.alarmSystem.alarmZones[adZone].accessory = cachedZone;
                         break;
                     }
