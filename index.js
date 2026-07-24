@@ -47,8 +47,15 @@ class AlarmdecoderPlatform {
             this.log('Cached Accessories Loaded');
             this.initPlatform();
             this.listener = http.createServer((req, res) => this.httpListener(req, res));
+            this.listener.on('error', (err) => {
+                this.log('ERROR: unable to start push-notification listener on port ' + this.port +
+                    ' (' + err.message + '). Accessories will still update by polling, but push ' +
+                    'notifications from the AlarmDecoder WebApp will not work until the port is freed.');
+            });
+            this.listener.on('listening', () => {
+                this.log('listening on port ' + this.port);
+            });
             this.listener.listen(this.port);
-            this.log('listening on port ' + this.port);
         });
     }
 
