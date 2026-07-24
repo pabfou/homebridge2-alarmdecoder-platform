@@ -45,7 +45,7 @@ class AlarmdecoderPlatform {
 
         this.api.on('didFinishLaunching', () => {
             this.log('Cached Accessories Loaded');
-            this.initPlatform();
+            this.initPlatform().catch((err) => this.log('ERROR initializing platform: ' + err));
             this.listener = http.createServer((req, res) => this.httpListener(req, res));
             this.listener.on('error', (err) => {
                 this.log('ERROR: unable to start push-notification listener on port ' + this.port +
@@ -204,7 +204,7 @@ class AlarmdecoderPlatform {
             this.switchAccessories.push(newAccessory);
         }
 
-        this._getStateFromAlarm(true);
+        await this._getStateFromAlarm(true);
     }
 
     httpListener(req, res) {
@@ -219,7 +219,7 @@ class AlarmdecoderPlatform {
         res.writeHead(200, { 'Content-Type': 'text/plain' });
         res.end();
         debug('Getting current state since ping received');
-        this._getStateFromAlarm(true);
+        this._getStateFromAlarm(true).catch((err) => this.log('ERROR handling push notification: ' + err));
     }
 
     async _getStateFromAlarm(report = false) {
@@ -227,6 +227,11 @@ class AlarmdecoderPlatform {
             await this.alarmSystem.getAlarmState();
         } catch (e) {
             this.log(e);
+            return false;
+        }
+
+        if (report && !this.alarmSystem.accessory) {
+            debug('report requested before platform finished initializing, skipping');
             return false;
         }
 
