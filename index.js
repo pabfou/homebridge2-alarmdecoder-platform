@@ -67,7 +67,7 @@ class AlarmdecoderPlatform {
     addAccessory(accessory, publish) {
         this.log('adding accessory ' + accessory.displayName);
 
-        accessory.onIdentify(() => {
+        accessory.on('identify', () => {
             this.log(accessory.displayName, 'Identify!!!');
         });
 
