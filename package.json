@@ -1,6 +1,6 @@
 {
   "name": "homebridge-alarmdecoder-platform-v2",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Homebridge 2.0 dynamic platform plugin for AlarmDecoder (Honeywell/DSC and Interlogix/GE/Caddx alarm panels).",
   "license": "Apache-2.0",
   "type": "module",
