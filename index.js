@@ -179,7 +179,6 @@ class AlarmdecoderPlatform {
                         newAccessory.addService(Service.CarbonMonoxideSensor, zoneName);
                     else
                         newAccessory.addService(Service.ContactSensor, zoneName);
-                    this.log(newAccessory);
                     this.alarmSystem.alarmZones[zone].accessory = newAccessory;
                     this.addAccessory(newAccessory, true);
                 } else {
