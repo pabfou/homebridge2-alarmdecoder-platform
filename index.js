@@ -28,6 +28,7 @@ class AlarmdecoderPlatform {
         this.enableNightMode = config.enableNightMode !== undefined ? config.enableNightMode : true;
         this.zoneAccessories = [];
         this.api = api;
+        this._statePromise = null;
 
         const platformType = config.DSCorHoneywell || config.platformType;
 
@@ -223,12 +224,12 @@ class AlarmdecoderPlatform {
     }
 
     async _getStateFromAlarm(report = false) {
-        try {
-            await this.alarmSystem.getAlarmState();
-        } catch (e) {
-            this.log(e);
-            return false;
+        if (!this._statePromise) {
+            this._statePromise = this.alarmSystem.getAlarmState().finally(() => {
+                this._statePromise = null;
+            });
         }
+        if (!await this._statePromise) return false;
 
         if (report && !this.alarmSystem.accessory) {
             debug('report requested before platform finished initializing, skipping');
