@@ -5,6 +5,16 @@
   "license": "Apache-2.0",
   "type": "module",
   "main": "index.js",
+  "files": [
+    "index.js",
+    "alarmsystems/",
+    "config.schema.json",
+    "sample-dsc-config.json",
+    "sample-honeywell-config.json",
+    "sample-interlogix-config.json",
+    "LICENSE",
+    "README.md"
+  ],
   "keywords": [
     "homebridge-plugin",
     "homebridge",
